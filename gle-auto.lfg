@@ -1,0 +1,941 @@
+
+AUTO	GAEILGE	CONFIG (1.0)
+  ROOTCAT	S.
+  FILES		.
+  LEXENTRIES	(AUTO GAEILGE).
+  RULES		(AUTO GAEILGE).
+  TEMPLATES	(AUTO GAEILGE).
+  GOVERNABLERELATIONS SUBJ OBJ OBJ2 COMP XCOMP OBL OBL-AG OBL-?+ PREDLINK.
+  SEMANTICFUNCTIONS   ADJUNCT TOPIC FOCUS POSS STANDARD.
+  NONDISTRIBUTIVES    NUM PERS CONJ-FORM SPEC.
+  EPSILON	      e.
+OPTIMALITYORDER NOGOOD.
+
+----
+AUTO	GAEILGE	RULES (1.0)
+
+   S --> { S: ! $ ^;
+ 	   { PUNCT
+ 	     S: ! $ ^}*
+ 	   CONJ: ^=!
+		 (^ COORD-LEVEL) = S;
+ 	   (PART: ^=!)
+ 	   S: ! $ ^
+ 	 | ({ CP: ! $ (^ ADJUNCT)
+ 	    | AdvP: ! $ (^ ADJUNCT)})
+ 	   { (AUX)
+ 	     V
+ 	     (NP: (^ SUBJ)=!
+		  (! CASE)=NOM)
+ 	     (VPinf: (^ XCOMP)=!)
+	     (PP)
+ 	     (NP: (^ OBJ)=!
+		  (! CASE)=ACC)
+ 	     (PART)
+	     (PP: (^ OBL-AG)=!)
+ 	     { AdvP: ! $ (^ ADJUNCT)
+ 	     | PP: ! $ (^ ADJUNCT)}*
+ 	     ({ AP: (^ PREDLINK)=!
+ 	      | AdvP: (^ PREDLINK)=!
+ 	      | CP: (^ PREDLINK)=!
+ 	      | PP: (^ PREDLINK)=!})
+ 	     ({ AdvP: (^ OBL)=!
+ 	      | PP: (^ OBL)=!})
+ 	     (CP: (^ COMP)=!)
+ 	     { AdvP: ! $ (^ ADJUNCT)
+ 	     | PP: ! $ (^ ADJUNCT)}*
+ 	     (NP: (^ OBJ)=!
+		  (! CASE)=ACC)
+ 	   | (NP: (^ PREDLINK)=!)
+ 	     COP
+ 	     ({ NP: (^ PREDLINK)=!
+ 	      | PP: (^ PREDLINK)=!
+ 	      | AP: (^ PREDLINK)=!}) 
+ 	     ({ NP: (^ SUBJ)=!
+		    (! CASE)=ACC
+ 	      | CP: (^ SUBJ)=!
+		    (! OBJ)=(^ PREDLINK)})
+ 	     (NP: (! PRED) =c 'PRO'
+		  (! CASE) =c ACC
+		  (^ SUBJ GEND) =c (! GEND)
+		  (^ SUBJ NUM) =c (! NUM))}
+ 	   ( (PUNCT)
+ 	    { AdvP: ! $ (^ ADJUNCT)
+ 	    | PP: ! $ (^ ADJUNCT)
+ 	    | CP: ! $ (^ ADJUNCT)})*
+ 	 }
+ 	 (PUNCT).
+
+   NP --> { NP: ! $ ^
+		(! CASE)=(^ CASE);
+ 	    { PUNCT
+ 	      NP: ! $ ^
+		  (! CASE)=(^ CASE)}*
+ 	    (PUNCT)
+ 	    CONJ: ^=!
+		  (^ COORD-LEVEL) = NP;
+ 	    NP: ! $ ^
+		(! CASE)=(^ CASE)
+ 
+ 	  | { (DET)
+ 	      N
+ 	      AP*: ! $ (^ ADJUNCT)
+		   (^ CASE)=c(! CASE)
+		   (^ GEND)=c(!GEND)
+		   (^ NUM)=c(! NUM); "adjectives"
+ 	      (DEM: (^ SPEC)=! "demonstrative"
+		    (^ DEF) =c +)
+ 	      PP*: ! $ (^ ADJUNCT);
+ 	      (NP: ! $ (^ ADJUNCT)
+		   (! CASE) =c GEN)
+ 	    | N
+ 	      AP*: ! $ (^ ADJUNCT)
+		   (^ CASE)=c(! CASE)
+		   (^ GEND)=c(! GEND)
+		   (^ NUM)=c(! NUM);
+ 	      NP: ! $ (^ ADJUNCT)
+		  (! CASE) =c GEN}
+ 	    ({ CPrel: ! $ (^ ADJUNCT)
+ 	     | CPrel: ! $ (^ ADJUNCT)
+		      (! SUBJ) = ^})}.
+
+   PP --> P
+      	  (PART)
+ 	  ({ NP: (^ OBJ)=!
+		 (! CASE) =c ACC
+ 	   | NP
+ 	   | DEM: (^ OBJ SPEC)=!
+	   | DEM}).
+
+   AP --> { (AdvP: ! $ (^ ADJUNCT))
+ 	    A
+ 	    (PP)
+ 	    PP*: ! $ (^ ADJUNCT);
+ 	    (VPinf: (^ XCOMP)=!)
+ 	  | AdvP: ! $ (^ ADJUNCT)
+		 (^ ADEGR) = (! ADEGR);
+ 	    A
+ 	    PP: (^ ADJUNCT OBL)=!
+	    	(! PCASE) = 'AS'}. 
+
+   AdvP --> { Adv "independent adverb"
+ 	    (PP)
+ 	  | PART: ^=!
+		(! PART-TYPE) =c 'GO'; "derived adverb"
+ 	    A
+ 	  | NP: ^=!
+		(! CASE)=NOM}.
+
+   CP --> { C
+ 	  | PART}
+ 	  (PART)
+ 	  { S: ^=!
+ 	  | S: (^ OBJ)=!}.
+
+   CPrel --> { C
+ 	  | PART}
+ 	  S.
+
+   VPinf --> { (NP: (^ OBJ)=!
+		    (! CASE) =c ACC)
+ 	    PART
+ 	    V
+ 	  | PP
+ 	    (NP: (^ OBJ)=!
+		 (! CASE) =c ACC)}.
+
+----
+
+AUTO	GAEILGE	TEMPLATES (1.0)
+
+   NOM-ACC = { (^ CASE) = NOM
+	  | (^ CASE) = ACC}.
+
+   PRONOUN(P) = (^ PRED) = 'PRO'
+	  (^ PERS) = P.
+
+   NOUN-NOM(P) = (^ PRED) = 'P'
+	  @(NOM-ACC)
+	  (^ PERS) = 3.
+
+   NOUN-GEN(P) = (^ PRED) = 'P'
+	  (^ CASE) = GEN
+	  (^ PERS) = 3.
+
+   ADJ-PRED(P) = (^ PRED) = 'P'
+	  (^ ATYPE) = PREDICATIVE.
+	  
+   ADJ-ATTR(P) = (^ PRED) = 'P'
+	  (^ ATYPE) = ATTRIBUTIVE.
+
+   ADJ-SG(P) = @(ADJ-ATTR P)
+	  @(NOM-ACC)
+	  { (^ GEND) = MASC
+	  | (^ GEND) = FEM}
+	  (^ NUM) = SG.
+
+   ADJ-MSG(P) = @(ADJ-ATTR P)
+	  @(NOM-ACC)
+	  (^ GEND) = MASC
+	  (^ NUM) = SG.
+
+   ADJ-FSG(P) = @(ADJ-ATTR P)
+	  @(NOM-ACC)
+	  (^ GEND) = FEM
+	  (^ NUM) = SG.
+
+
+   PREP-PRO(P) = (^ PRED) = 'P<(^ OBJ)>'
+   	  (^ PCASE) = 'P'
+	  (^ PTYPE) = SEM
+	  (^ OBJ PRED) = 'PRO'.
+
+----
+
+AUTO	GAEILGE	LEXICON (1.0)
+
+"""NOUNS"""
+
+Abbey	  N * @(NOUN-NOM ABBEY)
+	      (^ GEND) = MASC
+	      (^ NUM) = SG.
+
+adhmaid   N * @(NOUN-GEN WOOD)
+	      (^ GEND) = MASC
+	      (^ NUM) = SG.
+
+haille	  N * @(NOUN-GEN CLIFF)
+	      (^ GEND) = FEM
+	      (^ NUM) = SG.
+
+áit	  N * @(NOUN-NOM PLACE)
+	      (^ GEND) = FEM
+	      (^ NUM) = SG.
+
+am	  N * @(NOUN-NOM TIME)
+	      (^ GEND) = MASC
+	      (^ NUM) = SG.
+
+mBaile-Átha-Cliath N * @(NOUN-NOM DUBLIN)
+		       (^ GEND) = MASC
+		       (^ NUM) = SG
+		       (^ DEF) = +.
+
+bharr 	  N * @(NOUN-NOM TOP)
+	      (^ GEND) = MASC
+	      (^ NUM) = SG.
+
+béile	  N * @(NOUN-NOM MEAL)
+	      (^ GEND) = MASC
+	      (^ NUM) = SG.
+
+bliain    N * @(NOUN-NOM YEAR)
+	      (^ GEND) = FEM
+	      (^ NUM) = SG.
+
+mboscaí	  N * @(NOUN-NOM BOX)
+	      (^ GEND) = MASC
+	      (^ NUM) = PL.
+
+cabhair	  N * @(NOUN-NOM HELP)
+	      (^ GEND) = FEM
+	      (^ NUM) = SG.
+
+camán	  N * @(NOUN-NOM HURLING_STICK)
+	      (^ GEND) = MASC
+	      (^ NUM) = SG.
+
+Castle    N * @(NOUN-NOM CASTLE)
+	      (^ GEND) = MASC
+	      (^ NUM) = SG.
+
+ceann     N * @(NOUN-NOM ROOF)
+	      (^ GEND) = MASC
+	      (^ NUM) = SG.
+
+chéile	  N * @(NOUN-NOM EACH_OTHER)
+	      (^ GEND) = MASC
+	      (^ NUM) = SG.
+
+ceoil	  N * @(NOUN-GEN MUSIC)
+	      (^ GEND) = MASC
+	      (^ NUM) = SG.
+
+cloch	  N * @(NOUN-NOM STONE)
+	      (^ GEND) = FEM
+	      (^ NUM) = SG.
+
+clocha    N * @(NOUN-NOM STONE)
+	      (^ GEND) = FEM
+	      (^ NUM) = PL.
+
+choláiste  N * @(NOUN-NOM COLLEGE)
+	      (^ GEND) = MASC
+	      (^ NUM) = SG.
+
+Conradh-na-Gaeilge N * @(NOUN-NOM THE_GAELIC_LEAGUE)
+		       (^ GEND) = MASC
+		       (^ NUM) = SG
+		       (^ DEF) = +.
+
+corpán 	  N * @(NOUN-NOM CORPSE)
+	      (^ GEND) = MASC
+	      (^ NUM) = SG.
+
+chósta	  N * @(NOUN-NOM COAST)
+	      (^ GEND) = MASC
+	      (^ NUM) = SG.
+
+cuma	  N * @(NOUN-NOM APPEARANCE)
+	      (^ GEND) = FEM
+	      (^ NUM) = SG.
+
+dhiaidh   N * @(NOUN-NOM WAKE)
+	      (^ GEND) = MASC
+	      (^ NUM) = SG.
+
+daoine	  N * @(NOUN-NOM PERSON)
+	      (^ GEND) = MASC
+	      (^ NUM) = PL.
+
+dobharchú N * @(NOUN-NOM OTTER)
+	      (^ GEND) = MASC
+	      (^ NUM) = SG.
+
+drámaí	  N * @(NOUN-NOM DRAMA)
+	      (^ GEND) = MASC
+	      (^ NUM) = PL.
+
+fear 	  N * @(NOUN-NOM MAN)
+	      (^ GEND) = MASC
+	      (^ NUM) = SG.
+
+Gaeilge	  N * @(NOUN-NOM IRISH_LANGUAGE)
+	      (^ GEND) = FEM
+	      (^ NUM) = SG.
+
+gaoithe	  N * @(NOUN-GEN WIND)
+	      (^ GEND) = FEM
+	      (^ NUM) = SG.
+
+gníomhaí  N * @(NOUN-NOM AGENT)
+	      (^ GEND) = MASC
+	      (^ NUM) = SG.
+
+iontas	  N * @(NOUN-NOM SURPRISE)
+	      (^ GEND) = MASC
+	      (^ NUM) = SG.
+
+lá	  N * @(NOUN-NOM DAY)
+	      (^ GEND) = MASC
+	      (^ NUM) = SG.
+
+léinn	  N * @(NOUN-GEN BOOK_LEARNING)
+	      (^ GEND) = MASC
+	      (^ NUM) = SG.
+
+líonta 	  N * @(NOUN-NOM LINE)
+	      (^ GEND) = MASC
+	      (^ NUM) = PL.
+
+litríochta N * @(NOUN-GEN LITERATURE)
+	       (^ GEND) = FEM
+	       (^ NUM) = SG.
+
+madra 	  N * @(NOUN-NOM DOG)
+	      (^ GEND) = MASC
+	      (^ NUM) = SG.
+
+méid	  N * @(NOUN-NOM AMOUNT)
+	      (^ GEND) = MASC
+	      (^ NUM) = SG.
+
+nótaí	  N * @(NOUN-NOM NOTE)
+	      (^ GEND) = MASC
+	      (^ NUM) = PL.
+
+reilig 	  N * @(NOUN-NOM GRAVEYARD)
+	      (^ GEND) = FEM
+	      (^ NUM) = SG.
+
+Robert-Kennedy N * @(NOUN-NOM ROBERT_KENNEDY)
+	       	   (^ GEND) = MASC
+		   (^ NUM) = SG
+		   (^ DEF) = +.
+
+scoil	  N * @(NOUN-NOM SCHOOL)
+	      (^ GEND) = FEM
+	      (^ NUM) = SG.
+
+seanscéalta N * @(NOUN-NOM OLD_STORY)
+	      	(^ GEND) = MASC
+		(^ NUM) = PL.
+
+Síne	  N * @(NOUN-GEN CHINA)
+	      (^ GEND) = FEM
+	      (^ NUM) = SG.
+
+smionagair N * @(NOUN-NOM FRAGMENT)
+	       (^ GEND) = MASC
+	       (^ NUM) = PL.
+
+tí	  N * @(NOUN-GEN HOUSE)
+	      (^ GEND) = MASC
+	      (^ NUM) = SG.
+
+uisce 	  N * @(NOUN-GEN WATER)
+	      (^ GEND) = MASC
+	      (^ NUM) = SG.
+
+"""ADJECTIVES"""
+
+áitiúil   A * @(ADJ-SG LOCAL).
+
+beag	  A * @(ADJ-PRED SMALL).
+
+bocht	  A * @(ADJ-PRED POOR).
+
+buach	  A * @(ADJ-PRED VICTORIOUS).
+
+cleachtach A * (^ PRED) = 'ACCUSTOMED_TO<(^ OBJ)>'
+	       (^ ATYPE) = PREDICATIVE
+	       (^ PCASE) =c 'WITH-AGAINST'
+	       (^ PTYPE) =c NONSEM.
+
+deireanach A * @(ADJ-PRED LAST).
+
+fada	  Adv * (^ PRED) = 'LONG_AGO'.
+
+feargach  A * @(ADJ-PRED ANGRY).
+
+féidir 	  A * (^ PRED) = 'POSSIBLE<(^ XCOMP)>'.
+
+ghruama	  A * @(ADJ-FSG GLOOMY).
+
+hiontach A * @(ADJ-PRED WONDERFUL).
+
+léir 	  A * @(ADJ-PRED WHOLE).
+
+millteanach A * @(ADJ-MSG TERRIBLE).
+
+minic	  A * @(ADJ-PRED FREQUENT).
+
+móire 	  A * @(ADJ-ATTR GREAT)
+	      (^ CASE) = GEN
+	      (^ GEND) = FEM
+	      (^ NUM) = SG.
+
+úr 	  A * @(ADJ-SG NEW).
+
+"""ADVERBS"""
+
+abhaile Adv * (^ PRED) = 'HOME'.
+
+amach	PART * (^ PRT-FORM) = 'OUT_'.
+
+amárach Adv * (^ PRED) = 'TOMORROW'.
+
+an-	Adv * (^ PRED) = 'VERY'.
+
+anseo	Adv * (^ PRED) = 'HERE'.
+
+ansin	Adv * (^ PRED) = 'THEN-THERE'.
+
+aréir	Adv * (^ PRED) = 'LAST_NIGHT'.
+
+arís    Adv * (^ PRED) = 'AGAIN'.
+
+chomh	Adv * (^ PRED) = 'AS<(^ OBL-COMPAR)>'
+	      (^ ADEGR) = EQUATIVE.
+
+seal	Adv * (^ PRED) = 'A_WHILE'.
+
+suas	PART * (^ PRT-FORM) = 'UP';
+		Adv * (^ PRED) = 'UP'.
+
+tráth	Adv * (^ PRED) = 'ONCE'.
+
+"""VERBAL NOUNS"""
+bheith	  V * (^ TAM PROG) =c +.
+
+dul	  N * (^ PRED) = 'GO<(^ SUBJ) (^ OBL)>'
+	      (^ TAM PROG) = +.
+
+ithe	  N * (^ PRED) = 'EAT<(^ SUBJ) (^ OBJ)>'
+	      (^ TAM PROG) = +.
+
+lua 	  V * (^ PRED) = 'MENTION<(^ SUBJ) (^ OBJ)>'.
+
+sheanchas V * (^ PRED) = 'TELL_STORIES<(^ SUBJ)>'.
+
+teacht	  N * (^ PRED) = 'ARRIVE<(^ SUBJ)>'
+	      (^ TAM PROG) = +.
+
+"""VERBS"""
+bhí	  V * (^ PRED) = 'BE<(^ SUBJ) (^ PREDLINK)>'
+	      (^ TAM TENSE) = PAST
+	      (^ TAM ASP) = PERF
+	      (^ TAM MOOD) = IND.
+
+bhímis	  V * (^ TAM TENSE) = PAST
+	      (^ TAM ASP) = IMPERF
+	      (^ TAM MOOD) = IND
+	      (^ SUBJ PRED) = 'PRO'
+	      (^ SUBJ PERS) = 1
+	      (^ SUBJ NUM) = PL
+	      (^ SUBJ CASE) = NOM.
+
+buaileadh V * (^ PRED) = 'STRIKE<(^ OBJ)>(^ SUBJ)'
+	      (^ TAM TENSE) = PAST
+	      (^ TAM ASP) = PERF
+	      (^ TAM MOOD) = IND
+	      (^ SUBJ PRED) = 'ARB'.
+
+chaití	  V * (^ PRED) = 'THROW<(^ OBJ)>(^ SUBJ)'
+	      (^ TAM TENSE) = PAST
+	      (^ TAM ASP) = IMPERF
+	      (^ TAM MOOD) = IND
+	      (^ SUBJ PRED) = 'ARB'.
+
+casadh	  V * (^ PRED) = 'MEET<(^ OBL-AG) (^ OBJ)>(^ SUBJ)'
+	      (^ TAM TENSE) = PAST
+	      (^ TAM ASP) = PERF
+	      (^ TAM MOOD) = IND
+	      (^ SUBJ PRED) = 'ARB'.
+
+cheap	  V * (^ PRED) = 'THINK<(^ SUBJ) (^ COMP)>'
+	      (^ TAM TENSE) = PAST
+	      (^ TAM ASP) = PERF
+	      (^ TAM MOOD) = IND.
+
+ceapadh   V * (^ PRED) = 'THINK<(^ COMP)>(^ SUBJ)'
+	      (^ TAM TENSE) = PAST
+	      (^ TAM ASP) = PERF
+	      (^ TAM MOOD) = IND
+	      (^ SUBJ PRED) = 'ARB';
+	  V * (^ PRED) = 'SEEM<(^ OBL) (^ COMP)>(^ SUBJ)'
+	      (^ TAM TENSE) = PAST
+	      (^ TAM ASP) = PERF
+	      (^ TAM MOOD) = IND
+	      (^ SUBJ PRED) = 'ARB'.
+
+ceoladh   V * (^ PRED) = 'SING<>(^ SUBJ)'
+	      (^ TAM TENSE) = PAST
+	      (^ TAM ASP) = PERF
+	      (^ TAM MOOD) = IND
+	      (^ SUBJ PRED) = 'ARB'.
+
+chonaic	  V * (^ PRED) = 'SEE<(^ SUBJ) (^ OBJ)>'
+	      (^ TAM TENSE) = PAST
+	      (^ TAM ASP) = PERF
+	      (^ TAM MOOD) = IND.
+
+chreidtí  V * (^ PRED) = 'BELIEVE<(^ OBL)>(^ SUBJ)'
+	      (^ TAM TENSE) = PAST
+	      (^ TAM ASP) = IMPERF
+	      (^ TAM MOOD) = IND
+	      (^ SUBJ PRED) = 'ARB'.
+
+cuirtear  V * (^ PRED) = 'PUT<(^ OBL) (^ OBJ)>(^ SUBJ)'
+	      (^ TAM TENSE) = PRES
+	      (^ TAM ASP) = PERF
+	      (^ TAM MOOD) = IND
+	      (^ SUBJ PRED) = 'ARB'.
+
+chuathas  V * (^ PRED) = 'BEGIN<(^ XCOMP)>(^ SUBJ)'
+	      (^ TAM TENSE) = PAST
+	      (^ TAM ASP) = PERF
+	      (^ TAM MOOD) = IND
+	      (^ SUBJ PRED) = 'ARB'
+	      (^ XCOMP SUBJ) = (^ SUBJ).
+
+cuireadh  V * (^ PRED) = 'PUT<(^ OBL) (^ OBJ)>(^ SUBJ)'
+	      (^ TAM TENSE) = PRES
+	      (^ TAM ASP) = PERF
+	      (^ TAM MOOD) = IND
+	      (^ SUBJ PRED) = 'ARB'.
+
+cuirfear  V * (^ PRED) = 'PUT<(^ OBL) (^ OBJ)>(^ SUBJ)'
+	      (^ TAM TENSE) = FUT
+	      (^ TAM ASP) = PERF
+	      (^ TAM MOOD) = IND
+	      (^ SUBJ PRED) = 'ARB'.
+
+chuirfí   V * (^ PRED) = 'PUT<(^ OBL) (^ OBJ)>(^ SUBJ)'
+	      (^ TAM TENSE) = PRES
+	      (^ TAM ASP) = PERF
+	      (^ TAM MOOD) = COND
+	      (^ SUBJ PRED) = 'ARB'.
+
+chuirtí   V * (^ PRED) = 'PUT<(^ OBL) (^ OBJ)>(^ SUBJ)'
+	      (^ TAM TENSE) = PAST
+	      (^ TAM ASP) = IMPERF
+	      (^ TAM MOOD) = IND
+	      (^ SUBJ PRED) = 'ARB'.
+
+ndeachthas V * (^ PRED) = 'GO<(^ OBL)>(^ SUBJ)'
+	       (^ TAM TENSE) = PAST
+	       (^ TAM ASP) = PERF
+	       (^ TAM MOOD) = IND
+	       (^ SUBJ PRED) = 'ARB'.
+
+dhearcaimid V * (^ PRED) = 'BEHOLD<(^ SUBJ) (^ OBL)>'
+	      	(^ TAM TENSE) = PRES
+		(^ TAM ASP) = PERF
+		(^ TAM MOOD) = IND
+		(^ SUBJ PRED) = 'PRO'
+		(^ SUBJ PERS) = 1
+		(^ SUBJ NUM) = PL
+		(^ SUBJ CASE) = NOM.
+
+dódh 	  V * (^ PRED) = 'BURN<(^ OBJ)>(^ SUBJ)'
+	      (^ TAM TENSE) = PAST
+	      (^ TAM ASP) = PERF
+	      (^ TAM MOOD) = IND
+	      (^ SUBJ PRED) = 'ARB'.
+
+dúradh	  V * (^ PRED) = 'SAY<(^ COMP)>(^ SUBJ)'
+	      (^ TAM TENSE) = PAST
+	      (^ TAM ASP) = PERF
+	      (^ TAM MOOD) = IND
+	      (^ SUBJ PRED) = 'ARB'.
+
+éiríodh V * (^ PRED) = 'BECOME<(^ PREDLINK)>(^ SUBJ)'
+	      (^ TAM TENSE) = PAST
+	      (^ TAM ASP) = PERF
+	      (^ TAM MOOD) = IND
+	      (^ SUBJ PRED) = 'ARB'.
+
+fágadh	  V * (^ PRED) = 'LEAVE<(^ OBJ)>(^ SUBJ)'
+	      (^ TAM TENSE) = PAST
+	      (^ TAM ASP) = PERF
+	      (^ TAM MOOD) = IND
+	      (^ SUBJ PRED) = 'ARB'.
+
+itheadh	  V * (^ PRED) = 'EAT<>(^ SUBJ)'
+	      (^ TAM TENSE) = PAST
+	      (^ TAM ASP) = PERF
+	      (^ TAM MOOD) = IND
+	      (^ SUBJ PRED) = 'ARB'.
+
+labhraíodh V * (^ PRED) = 'SPEAK<>(^ SUBJ)'
+	       (^ TAM TENSE) = PAST
+	       (^ TAM ASP) = PERF
+	       (^ TAM MOOD) = IND
+	       (^ SUBJ PRED) = 'ARB'.
+
+labhraítear V * (^ PRED) = 'SPEAK<(^ OBJ)>(^ SUBJ)'
+	      	(^ TAM TENSE) = PRES
+		(^ TAM ASP) = PERF
+		(^ TAM MOOD) = IND
+		(^ SUBJ PRED) = 'ARB'.
+
+léiríodh  V * (^ PRED) = 'PRODUCE<(^ OBJ)>(^ SUBJ)'
+	      (^ TAM TENSE) = PAST
+	      (^ TAM ASP) = PERF
+	      (^ TAM MOOD) = IND
+	      (^ SUBJ PRED) = 'ARB'.
+
+óladh	   V * (^ PRED) = 'DRINK<>(^ SUBJ)'
+	       (^ TAM TENSE) = PAST
+	       (^ TAM ASP) = PERF
+	       (^ TAM MOOD) = IND
+	       (^ SUBJ PRED) = 'ARB'.
+
+rabhthas   V * (^ PRED) = 'BE<(^ PREDLINK)>(^ SUBJ)'
+	       (^ TAM TENSE) = PAST
+	       (^ TAM ASP) = PERF
+	       (^ TAM MOOD) = IND
+	       (^ SUBJ PRED) = 'ARB'.
+
+raibh	   V * (^ PRED) = 'BE<(^ SUBJ) (^ PREDLINK)>'
+	       (^ TAM TENSE) = PAST
+	       (^ TAM ASP) = PERF
+	       (^ TAM MOOD) = IND.
+
+raiceáladh V * (^ PRED) = 'WRECK<(^ OBJ)>(^ SUBJ)'
+	       (^ TAM TENSE) = PAST
+	       (^ TAM ASP) = PERF
+	       (^ TAM MOOD) = IND
+	       (^ SUBJ PRED) = 'ARB'.
+
+rinneadh   V * (^ PRED) = 'MAKE<(^ OBJ)>(^ SUBJ)'
+	       (^ TAM TENSE) = PAST
+	       (^ TAM ASP) = PERF
+	       (^ TAM MOOD) = IND
+	       (^ SUBJ PRED) = 'ARB'.
+
+scaoileadh V * (^ PRED) = 'LET_OUT<(^ OBJ)>(^ SUBJ)'
+	       (^ TAM TENSE) = PAST
+	       (^ TAM ASP) = PERF
+	       (^ TAM MOOD) = IND
+	       (^ SUBJ PRED) = 'ARB'
+	       (^ PRT-FORM) =c 'OUT_'.
+
+scríobhadh V * (^ PRED) = 'WRITE<(^ OBL)>(^ SUBJ)'
+	       (^ TAM TENSE) = PAST
+	       (^ TAM ASP) = PERF
+	       (^ TAM MOOD) = IND
+	       (^ SUBJ PRED) = 'ARB'.
+
+siúladh	  V * (^ PRED) = 'WALK<>(^ SUBJ)'
+	      (^ TAM TENSE) = PAST
+	      (^ TAM ASP) = PERF
+	      (^ TAM MOOD) = IND
+	      (^ SUBJ PRED) = 'ARB'.
+
+stadadh	  V * (^ PRED) = 'STOP<>(^ SUBJ)'
+	      (^ TAM TENSE) = PAST
+	      (^ TAM ASP) = PERF
+	      (^ TAM MOOD) = IND
+	      (^ SUBJ PRED) = 'ARB'.
+
+tháinig	  V * (^ PRED) = 'COME<(^ SUBJ)>'
+	      (^ TAM TENSE) = PAST
+	      (^ TAM ASP) = PERF
+	      (^ TAM MOOD) = IND.
+
+théití	  V * (^ PRED) = 'GO<(^ XCOMP)>(^ SUBJ)'
+	      (^ TAM TENSE) = PAST
+	      (^ TAM ASP) = IMPERF
+	      (^ TAM MOOD) = IND
+	      (^ SUBJ PRED) = 'ARB'
+	      (^ XCOMP SUBJ) = (^ SUBJ).
+
+tógadh 	  V * (^ PRED) = 'LIFT_UP<(^ OBJ)>(^ SUBJ)'
+	      (^ TAM TENSE) = PAST
+	      (^ TAM ASP) = PERF
+	      (^ TAM MOOD) = IND
+	      (^ SUBJ PRED) = 'ARB'
+	      (^ PRT-FORM) =c 'UP_'.
+
+tostadh	  V * (^ PRED) = 'BECOME_SILENT<>(^ SUBJ)'
+	      (^ TAM TENSE) = PAST
+	      (^ TAM ASP) = PERF
+	      (^ TAM MOOD) = IND
+	      (^ SUBJ PRED) = 'ARB'.
+
+tugtar	  V * (^ PRED) = 'GIVE<(^ OBJ) (^ OBL)>(^ SUBJ)'
+	      (^ TAM TENSE) = PRES
+	      (^ TAM ASP) = PERF
+	      (^ TAM MOOD) = IND
+	      (^ SUBJ PRED) = 'ARB'.
+
+úsáidtear V * (^ PRED) = 'USE<(^ OBJ)>(^ SUBJ)'
+	      (^ TAM TENSE) = PRES
+	      (^ TAM ASP) = PERF
+	      (^ TAM MOOD) = IND
+	      (^ SUBJ PRED) = 'ARB'.
+
+"""COPULA"""
+
+is	  COP * (^ PRED) = 'BE<(^ SUBJ) (^ PREDLINK)>'
+	      	{ (^ TAM TENSE) = PRES
+		| (^ TAM TENSE) = FUT}
+		(^ TAM ASP) = PERF
+		(^ TAM MOOD) = IND.
+
+nach	  COP * (^ PRED) = 'BE<(^ PREDLINK)>'
+	      	{ (^ TAM TENSE) = PRES
+		| (^ TAM TENSE) = FUT}
+		(^ TAM ASP) = PERF
+		(^ TAM MOOD) = IND
+		(^ NEG) = +.
+
+"""PREPOSITIONS"""
+
+ag	  P * (^ PCASE) = 'AT'
+	      (^ PTYPE) = NONSEM.
+
+ar 	  P * (^ PRED) = 'ON<(^ OBJ)>'
+	      (^ PCASE) = 'ON'
+	      (^ PTYPE) = SEM;
+	  C *.
+
+orm	  P * (^ PRED) = 'PRO'
+	      (^ PCASE) = 'ON'
+	      (^ PTYPE) = NONSEM
+	      (^ CASE) = OBL
+	      (^ PERS) = 1
+	      (^ NUM) = SG.
+
+orthu	  P * @(PREP-PRO ON)
+	      (^ OBJ PERS) = 3
+	      (^ OBJ NUM) = PL.
+
+as	  P * (^ PRED) = 'OUT_OF<(^ OBJ)>'
+	      (^ PRED) = 'OUT_OF'
+	      (^ PTYPE) = SEM.
+
+chuig 	  P * (^ PRED) = 'TO-TOWARDS<(^ OBJ)>'
+	      (^ PCASE) = 'TO-TOWARDS'
+	      (^ PTYPE) = SEM.
+
+den	  P * (^ PRED) = 'OF<(^ OBJ)>'
+	      (^ PCASE) = 'OF'
+	      (^ PTYPE) = SEM
+	      (^ OBJ DEF) = +_.
+
+dom	  P * @(PREP-PRO TO)
+	      (^ OBJ PERS) = 1
+	      (^ OBJ NUM) = SG.
+
+faoin 	  P * (^ PRED) = 'ABOUT<(^ OBJ)>'
+	      (^ PTYPE) = SEM
+	      (^ OBJ DEF) = +_.
+
+i	  P * (^ PRED) = 'IN<(^ OBJ)>'
+	      (^ PCASE) = 'IN'
+	      (^ PTYPE) = SEM.
+
+ina	  P * (^ PRED) = 'IN<(^ OBJ)>'
+	      (^ PCASE) = 'IN'
+	      (^ PTYPE) = SEM
+	      (^ OBJ DEF) = +
+	      (^ OBJ SPEC POSS PRED) = 'it'
+	      (^ OBJ SPEC POSS PERS) = 3
+	      (^ OBJ SPEC POSS NUM) = SG.
+
+sa 	  P * (^ PRED) = 'IN<(^ OBJ)>'
+	      (^ PCASE) = 'IN'
+	      (^ PTYPE) = SEM
+	      (^ OBJ DEF) = +_
+	      (^ OBJ NUM) =c SG.
+
+san	  P * (^ PRED) = 'IN<(^ OBJ)>'
+	      (^ PCASE) = 'IN'
+	      (^ PTYPE) = SEM
+	      (^ OBJ DEF) = +_
+	      (^ OBJ NUM) =c SG.
+
+sna	  P * (^ PRED) = 'IN<(^ OBJ)>'
+	      (^ PCASE) = 'IN'
+	      (^ PTYPE) = SEM
+	      (^ OBJ DEF) = +_
+	      (^ OBJ NUM) =c PL.
+
+le	  P * (^ PRED) = 'WITH-AGAINST<(^ OBJ)>'
+	      (^ PCASE) = 'WITH-AGAINST'
+	      (^ PTYPE) = SEM;
+	  P * (^ PCASE) = 'WITH-AGAINST'
+	      (^ PTYPE) = NONSEM.
+
+leis 	  P * @(PREP-PRO WITH-AGAINST)
+	      (^ OBJ GEND) = MASC
+	      (^ OBJ PERS) = 3
+	      (^ OBJ NUM) = SG;
+	  P * (^ PRED) = 'WITH-AGAINST<(^ OBJ)>'
+	      (^ PCASE) = 'WITH-AGAINST'
+	      (^ PTYPE) = SEM
+	      (^ OBJ DEF) =c +;
+	  P * (^ PRED) = 'AS<(^ OBJ>'
+	      (^ PCASE) = 'AS'
+	      (^ PTYPE) = NONSEM
+	      (^ OBJ PRED) = 'PRO'
+	      (^ OBJ GEND) = MASC
+	      (^ OBJ PERS) = 3
+	      (^ OBJ NUM) = SG.
+
+ó	  P * (^ PCASE) = 'FROM'
+	      (^ PTYPE) = NONSEM.
+
+thairis	  P * @(PREP-PRO OVER-BY)
+	      (^ OBJ GEND) = MASC
+	      (^ OBJ PERS) = 3
+	      (^ OBJ NUM) = SG.
+
+"""CONJUNCTIONS, AUXILIARIES"""
+
+a	PART * (^ PART-TYPE) = 'A';
+	DET * (^ DEF) = +.
+
+agus	CONJ * (^ COORD-FORM) = 'AGUS'.
+
+dtí	PART * (^ PCASE) =c 'TO'
+	       (^ OBJ DEF) =c +.
+
+go	PART * (^ PART-TYPE) = 'GO';
+	C *;
+	P * (^ PRED) = 'TO<(^ OBJ)>'
+	    (^ PCASE) = 'TO'
+	    (^ PTYPE) = SEM.
+
+gur	C * (^ TAM TENSE) =c PAST.
+
+níor	AUX * (^ NEG) = +
+	      (^ TAM TENSE) =c PAST
+	      (^ TAM MOOD) = IND.
+
+nuair   C * (^ PRED) = 'WHEN<(^ OBJ)>'.
+
+"""ARTICLES, DEMONSTRATIVES"""
+
+an 	  DET * (^ DEF) = +
+		{ (^ CASE) = NOM
+		| (^ CASE) = ACC}
+		{ (^ GEND) = MASC
+		| (^ GEND) = FEM}
+		(^ NUM) = SG;
+          DET * (^ DEF) = +
+	      	(^ GEND) = MASC
+		(^ CASE) = GEN
+		(^ NUM) = SG.
+
+na 	  DET * (^ DEF) = +
+		(^ GEND) = FEM
+		(^ CASE) = GEN
+		(^ NUM) = SG;
+	  DET * (^ DEF) = +
+		{ (^ CASE) = NOM
+		| (^ CASE) = ACC}
+		{ (^ GEND) = MASC
+		| (^ GEND) = FEM}
+		(^ NUM) = PL.
+
+sin 	  DEM * (^ DET PRED) = 'THAT-THOSE'.
+
+shin	  DEM * (^ PRED) =c 'LONG_AGO'
+	      	(^ PCASE) =c 'FROM'
+		(^ PTYPE) =c NONSEM.
+
+siúd	  DEM * (^ DET PRED) = 'THAT-YON'.
+
+"""PRONOUNS"""
+
+mé	  N * @(PRONOUN 1)
+	      @(NOM-ACC)
+	      (^ NUM) = SG.
+
+
+sé	  N * @(PRONOUN 3)
+	      (^ GEND) = MASC
+	      (^ CASE) = NOM
+	      (^ NUM) = SG.
+
+é 	  N * @(PRONOUN 3)
+	      (^ GEND) = MASC
+	      (^ CASE) = ACC
+	      (^ NUM) = SG.
+
+muid	  N * @(PRONOUN 1)
+	      @(NOM-ACC)
+	      (^ NUM) = PL.
+
+sibh	  N * @(PRONOUN 2)
+	      @(NOM-ACC)
+	      (^ NUM) = PL.
+
+siad 	  N * @(PRONOUN 3)
+	      (^ CASE) = NOM
+	      (^ NUM) = PL.
+
+iad	  N * @(PRONOUN 3)
+	      (^ CASE) = ACC
+	      (^ NUM) = PL.
+
+"""PUNCTUATION"""
+.	PUNCT *.
+
+,	PUNCT *.
+
+----
